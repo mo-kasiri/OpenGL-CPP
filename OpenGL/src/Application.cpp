@@ -48,9 +48,15 @@ int main(void)
     cout << glGetString(GL_VERSION) << endl;
 
     float positions[] = {
-          0.0f,  0.5f, 0.0f,
-          0.5f, -0.5f, 0.0f,
-         -0.5f, -0.5f, 0.0f
+         -0.5f,  -0.5f,
+          0.5f,  -0.5f,
+          0.5f,   0.5f,
+         -0.5f,   0.5f
+    };
+
+    unsigned int indices[] = {
+        0, 1, 2,
+        2, 3, 0
     };
 
     // Create vertex buffer object (VBO)
@@ -61,8 +67,15 @@ int main(void)
 
     // Tell OpenGL how to locate the first attribute (positions(vertex positions)) inside the buffer, index 0
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Create Index Buffer Object (IBO)
+    unsigned int ibo; // IBO
+    glGenBuffers(1, &ibo); // Generating the buffer which is kind of equivalent to glCreateProgram();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 
     /*
       Shaders
@@ -70,9 +83,6 @@ int main(void)
    // Vertex Shader
    
     ShaderProgramSource source = ParseShader("res/shaders/Basic.shader"); // relative path
-    //std::cout << source.VertexSource << std::endl;
-    //std::cout << source.FragmentSource << std::endl;
-
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
     glUseProgram(shader); // binding our program
 
@@ -88,7 +98,8 @@ int main(void)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -102,6 +113,7 @@ int main(void)
 }
 
 
+//  ****************************************************************************
 static unsigned int CompileShader(const std::string& source, unsigned int type)
 {
     unsigned int id = glCreateShader(type);
