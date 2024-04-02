@@ -30,6 +30,10 @@ int main(void)
         cerr << "There is an issue with glfw initialization" << endl;
         return -1;
     }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
       
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
@@ -41,6 +45,7 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
 
     if (glewInit() != GLEW_OK)
         cerr << "Error! Initialzing Glew" << endl;
@@ -48,10 +53,10 @@ int main(void)
     cout << glGetString(GL_VERSION) << endl;
 
     float positions[] = {
-         -0.5f,  -0.5f,
-          0.5f,  -0.5f,
-          0.5f,   0.5f,
-         -0.5f,   0.5f
+         -0.5f,  -0.5f, // 0
+          0.5f,  -0.5f, // 1
+          0.5f,   0.5f, // 2
+         -0.5f,   0.5f  // 3
     };
 
     unsigned int indices[] = {
@@ -59,16 +64,24 @@ int main(void)
         2, 3, 0
     };
 
+    // Create vertex array object (VAO)
+    unsigned int vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+
     // Create vertex buffer object (VBO)
     unsigned int buffer; // VBO
     glGenBuffers(1, &buffer); // Generating the buffer which is kind of equivalent to glCreateProgram();
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+    // Then we can make a call to the glBufferData function that copies the previously defined vertex data into the buffer's memory
 
     // Tell OpenGL how to locate the first attribute (positions(vertex positions)) inside the buffer, index 0
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
 
     // Create Index Buffer Object (IBO)
     unsigned int ibo; // IBO
@@ -81,10 +94,18 @@ int main(void)
       Shaders
    */
    // Vertex Shader
-   
     ShaderProgramSource source = ParseShader("res/shaders/Basic.shader"); // relative path
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
+   
     glUseProgram(shader); // binding our program
+   
+
+
+    // Uniforms
+    // ---------------------------------------------------
+    int location = glGetUniformLocation(shader, "u_Color");
+    glUniform4f(location, 0.2f, 0.3f, 0.8f, 1.0f);
+
 
 
     glfwSetFramebufferSizeCallback(window, &framebuffer_size_callback);
