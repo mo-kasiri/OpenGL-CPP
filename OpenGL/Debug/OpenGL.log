@@ -1,4 +1,14 @@
-﻿  Application.cpp
+﻿  IndexBuffer.cpp
+C:\dev\opengl\OpenGL\OpenGL\src\IndexBuffer.cpp(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\dev\opengl\OpenGL\OpenGL\src\IndexBuffer.cpp(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Renderer.cpp
+  Application.cpp
+C:\dev\opengl\OpenGL\OpenGL\src\Application.cpp(9,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\dev\opengl\OpenGL\OpenGL\src\Application.cpp(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  VertexBuffer.cpp
+C:\dev\opengl\OpenGL\OpenGL\src\VertexBuffer.cpp(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\dev\opengl\OpenGL\OpenGL\src\VertexBuffer.cpp(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Generating Code...
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
 glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info

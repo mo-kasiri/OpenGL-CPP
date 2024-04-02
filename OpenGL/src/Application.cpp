@@ -6,6 +6,11 @@
 #include <sstream>
 using namespace std;
 
+#include "Renderer.h";
+#include "VertexBuffer.h"
+#include "IndexBuffer.h";
+
+
 struct ShaderProgramSource {
     std::string VertexSource;
     std::string FragmentSource;
@@ -71,25 +76,16 @@ int main(void)
 
 
     // Create vertex buffer object (VBO)
-    unsigned int buffer; // VBO
-    glGenBuffers(1, &buffer); // Generating the buffer which is kind of equivalent to glCreateProgram();
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
-    // Then we can make a call to the glBufferData function that copies the previously defined vertex data into the buffer's memory
+    VertexBuffer vb(positions,sizeof(positions));
+
 
     // Tell OpenGL how to locate the first attribute (positions(vertex positions)) inside the buffer, index 0
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-
+   
     // Create Index Buffer Object (IBO)
-    unsigned int ibo; // IBO
-    glGenBuffers(1, &ibo); // Generating the buffer which is kind of equivalent to glCreateProgram();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-
+    IndexBuffer ib(indices,6);
+    
     /*
       Shaders
    */
@@ -120,6 +116,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         //glDrawArrays(GL_TRIANGLES, 0, 6);
+        ib.Bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         /* Swap front and back buffers */
